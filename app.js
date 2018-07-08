@@ -26,6 +26,32 @@ var budgetController = (function() {
       inc: 0
     }
   };
+
+  // Budget Controller API
+  return {
+    // добавление элемента
+    addItem: function(type, desc, val) {
+      var newItem, ID;
+
+      // создание нового ID
+      if (data.allItems[type].length > 0) {
+        ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+      } else {
+        ID = 0;
+      }
+
+      // создание элемента в зависимости от типа
+      if (type === 'exp') {
+        newItem = new Expense(ID, desc, val);
+      } else if (type === 'inc') {
+        newItem = new Income(ID, desc, val);
+      }
+
+      // добавляем в структуру данных
+      data.allItems[type].push(newItem);
+      return newItem;
+    }
+  };
 })();
 
 // модуль UI
@@ -81,7 +107,11 @@ var controller = (function(budgetCtrl, UICtrl) {
   
   // добавление нового элемента
   var ctrlAddItem = function() {
-    var input = UICtrl.getInput();
+    var input, newItem;
+
+    input = UICtrl.getInput();
+
+    newItem = budgetCtrl.addItem(input.type, input.description, input.value);
   };
 
   // Controller API
