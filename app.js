@@ -3,7 +3,7 @@ var budgetController = (function() {})();
 
 // модуль UI
 var UIController = (function() {
-    // селекторы
+  // селекторы
   var DOMStrings = {
     inputType: ".add__type",
     inputDecription: ".add__description",
@@ -32,19 +32,32 @@ var UIController = (function() {
 
 // модуль контроллера приложения
 var controller = (function(budgetCtrl, UICtrl) {
-  var DOM = UICtrl.getDOMStrings();
+  var setupEventListeners = function() {
+    var DOM = UICtrl.getDOMStrings();
+    
+    // обработчик нажатия на кнопку
+    document.querySelector().addEventListener("click", ctrlAddItem);
+
+    // обработчик нажатия на Enter
+    document.addEventListener("keypress", function(event) {
+      //   which для старых браузеров
+      if (event.keyCode === 13 || event.which === 13) {
+        ctrlAddItem();
+      }
+    });
+  };
+  
   // добавление нового элемента
   var ctrlAddItem = function() {
-    var input = UICtrl.getInput(DOM.inputBtn);
+    var input = UICtrl.getInput();
   };
-  // обработчик нажатия на кнопку
-  document.querySelector().addEventListener("click", ctrlAddItem);
 
-  // обработчик нажатия на Enter
-  document.addEventListener("keypress", function(event) {
-    //   which для старых браузеров
-    if (event.keyCode === 13 || event.which === 13) {
-      ctrlAddItem();
+  return {
+    // функция инициализации
+    init: function() {
+      setupEventListeners();
     }
-  });
+  };
 })(budgetController, UIController);
+
+controller.init();
