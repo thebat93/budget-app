@@ -62,7 +62,9 @@ var UIController = (function() {
     inputType: ".add__type",
     inputDecription: ".add__description",
     inputValue: ".add__value",
-    inputBtn: ".add__btn"
+    inputBtn: ".add__btn",
+    incomeContainer: '.income__list',
+    expensesContainer: '.expenses__list'
   };
 
   // UI Controller API
@@ -74,12 +76,36 @@ var UIController = (function() {
       type: document.querySelector(DOMStrings.inputType).value, // 'inc' / 'exp'
 
       // описание
-      description = document.querySelector(DOMStrings.inputDecription).value,
+      description: document.querySelector(DOMStrings.inputDecription).value,
 
       // сумма
-      value = document.querySelector(DOMStrings.inputValue).value
+      value: document.querySelector(DOMStrings.inputValue).value
       };
     },
+
+    // добавление дохода / расхода
+    addListItem: function(obj, type) {
+      var html, newHtml, element;
+
+      // шаблоны html-кода
+      if (type === 'inc') {
+        element = DOMStrings.incomeContainer;
+
+        html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+      } else if (type === 'exp') {
+        element = DOMStrings.expensesContainer;
+
+        html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+      }
+
+      newHtml = html.replace('%id%', obj.id);
+      newHtml = newHtml.replace('%description%', obj.description);
+      newHtml = newHtml.replace('%value%', obj.value);
+
+      // добавляем html в div после контента и перед закрывающим тегом
+      document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+    },
+
     // получение селекторов
     getDOMStrings: function() {
         return DOMStrings;
@@ -94,7 +120,7 @@ var controller = (function(budgetCtrl, UICtrl) {
     var DOM = UICtrl.getDOMStrings();
 
     // обработчик нажатия на кнопку
-    document.querySelector().addEventListener("click", ctrlAddItem);
+    document.querySelector(DOM.inputBtn).addEventListener("click", ctrlAddItem);
 
     // обработчик нажатия на Enter
     document.addEventListener("keypress", function(event) {
@@ -112,6 +138,8 @@ var controller = (function(budgetCtrl, UICtrl) {
     input = UICtrl.getInput();
 
     newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+  
+    UIController.addListItem(newItem, input.type);
   };
 
   // Controller API
