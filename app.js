@@ -106,6 +106,24 @@ var UIController = (function() {
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
     },
 
+    // очищение полей ввода
+    clearFields: function() {
+      var fields, fieldsArr;
+      
+      // выбор по нескольким селекторам
+      fields = document.querySelectorAll(DOMStrings.inputDecription + ', ' + DOMStrings.inputValue);
+      
+      // првращаем List в Array
+      fieldsArr = Array.prototype.slice.call(fields);
+
+      fieldsArr.forEach(function(current, i, array) {
+        current.value = "";
+      });
+
+      // фокус на первом инпуте
+      fieldsArr[0].focus();
+    },
+
     // получение селекторов
     getDOMStrings: function() {
         return DOMStrings;
@@ -140,6 +158,8 @@ var controller = (function(budgetCtrl, UICtrl) {
     newItem = budgetCtrl.addItem(input.type, input.description, input.value);
   
     UIController.addListItem(newItem, input.type);
+
+    UIController.clearFields();
   };
 
   // Controller API
