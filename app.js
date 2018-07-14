@@ -79,7 +79,7 @@ var UIController = (function() {
       description: document.querySelector(DOMStrings.inputDecription).value,
 
       // сумма
-      value: document.querySelector(DOMStrings.inputValue).value
+      value: parseFloat(document.querySelector(DOMStrings.inputValue).value)
       };
     },
 
@@ -98,9 +98,9 @@ var UIController = (function() {
         html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
 
-      newHtml = html.replace('%id%', obj.id);
-      newHtml = newHtml.replace('%description%', obj.description);
-      newHtml = newHtml.replace('%value%', obj.value);
+      newHtml = html.replace('%id%', obj.id)
+        .replace('%description%', obj.description)
+        .replace('%value%', obj.value);
 
       // добавляем html в div после контента и перед закрывающим тегом
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
@@ -149,17 +149,27 @@ var controller = (function(budgetCtrl, UICtrl) {
     });
   };
   
+  // обновление бюджета
+  var updateBudget = function() {
+
+  };
+
   // добавление нового элемента
   var ctrlAddItem = function() {
     var input, newItem;
 
     input = UICtrl.getInput();
 
-    newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+    if (input.description !== '' && !isNaN(input.value) && input.value > 0) {
+      
+      newItem = budgetCtrl.addItem(input.type, input.description, input.value);
   
-    UIController.addListItem(newItem, input.type);
-
-    UIController.clearFields();
+      UIController.addListItem(newItem, input.type);
+  
+      UIController.clearFields();
+    
+      updateBudget();
+    }
   };
 
   // Controller API
