@@ -15,6 +15,15 @@ var budgetController = (function() {
     this.value = value;
   };
 
+  // расчет всех доходов / расходов
+  var calculateTotal = function(type) {
+    var sum = 0;
+    data.allItems[type].forEach(function(current) {
+      sum += current.value;
+    });
+    data.totals[type] = sum;
+  };
+
   // структура данных
   var data = {
     allItems: {
@@ -24,7 +33,9 @@ var budgetController = (function() {
     totals: {
       exp: 0,
       inc: 0
-    }
+    },
+    budget: 0,
+    percentage: -1
   };
 
   // Budget Controller API
@@ -50,6 +61,31 @@ var budgetController = (function() {
       // добавляем в структуру данных
       data.allItems[type].push(newItem);
       return newItem;
+    },
+
+    // расчет бюджета
+    calculateBudget: function() {
+      calculateTotal('exp');
+      calculateTotal('inc');
+
+      data.budget = data.totals.inc - data.totals.exp;
+
+      if (data.totals.inc > 0) {
+        data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+      } else {
+        data.percentage = -1;
+      }
+
+    },
+
+    // вернуть значение бюджета
+    getBudget: function() {
+      return {
+        budget: data.budget,
+        percentage: data.percentage,
+        totalInc: data.totals.inc,
+        totalExp: data.totals.exp
+      }
     }
   };
 })();
@@ -151,7 +187,9 @@ var controller = (function(budgetCtrl, UICtrl) {
   
   // обновление бюджета
   var updateBudget = function() {
+    budgetCtrl.calculateBudget();
 
+    var budget = budgetCtrl.getBudget();
   };
 
   // добавление нового элемента
@@ -161,7 +199,7 @@ var controller = (function(budgetCtrl, UICtrl) {
     input = UICtrl.getInput();
 
     if (input.description !== '' && !isNaN(input.value) && input.value > 0) {
-      
+
       newItem = budgetCtrl.addItem(input.type, input.description, input.value);
   
       UIController.addListItem(newItem, input.type);
