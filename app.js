@@ -100,7 +100,11 @@ var UIController = (function() {
     inputValue: ".add__value",
     inputBtn: ".add__btn",
     incomeContainer: '.income__list',
-    expensesContainer: '.expenses__list'
+    expensesContainer: '.expenses__list',
+    budgetLabel: '.budget__value',
+    incomeLabel: '.budget__income--value',
+    expensesLabel: '.budget__expenses--value',
+    percentageLabel: '.budget__expenses--percentage'
   };
 
   // UI Controller API
@@ -160,6 +164,19 @@ var UIController = (function() {
       fieldsArr[0].focus();
     },
 
+    // отображение бюджета
+    displayBudget: function(obj) {
+      document.querySelector(DOMStrings.budgetLabel).textContent = obj.budget;
+      document.querySelector(DOMStrings.incomeLabel).textContent = obj.totalInc;
+      document.querySelector(DOMStrings.expensesLabel).textContent = obj.totalExp;
+      
+      if (obj.percentage > 0) {
+        document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage + '%';
+      } else {
+        document.querySelector(DOMStrings.percentageLabel).textContent = '---';
+      }
+    },
+
     // получение селекторов
     getDOMStrings: function() {
         return DOMStrings;
@@ -190,6 +207,8 @@ var controller = (function(budgetCtrl, UICtrl) {
     budgetCtrl.calculateBudget();
 
     var budget = budgetCtrl.getBudget();
+
+    UIController.displayBudget(budget);
   };
 
   // добавление нового элемента
@@ -214,6 +233,12 @@ var controller = (function(budgetCtrl, UICtrl) {
   return {
     // функция инициализации
     init: function() {
+      UIController.displayBudget({
+        budget: 0,
+        percentage: -1,
+        totalInc: 0,
+        totalExp: 0
+      });
       setupEventListeners();
     }
   };
