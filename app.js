@@ -63,6 +63,21 @@ var budgetController = (function() {
       return newItem;
     },
 
+    // удаление элемента
+    deleteItem: function(type, id) {
+      var ids, index;
+
+      ids = data.allItems.map(function(current) {
+        return current.id;
+      });
+
+      index = ids.indexOf(id);
+
+      if (index !== -1) {
+        data.allItems[type].splice(index, 1);
+      }
+    },
+
     // расчет бюджета
     calculateBudget: function() {
       calculateTotal('exp');
@@ -244,6 +259,8 @@ var controller = (function(budgetCtrl, UICtrl) {
       splitID = itemID.splitID('-');
       type = itemID.splitID('-')[0];
       ID = itemID.splitID('-')[1];
+
+      budgetCtrl.deleteItem(type, parseInt(ID));
     }
   };
 
