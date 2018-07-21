@@ -67,7 +67,7 @@ var budgetController = (function() {
     deleteItem: function(type, id) {
       var ids, index;
 
-      ids = data.allItems.map(function(current) {
+      ids = data.allItems[type].map(function(current) {
         return current.id;
       });
 
@@ -162,6 +162,12 @@ var UIController = (function() {
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
     },
 
+    // удаление дохода / расхода
+    deleteListItem: function(selectorID) {
+      var element = document.getElementById(selectorID);
+      element.parentNode.removeChild(element);
+    },
+
     // очищение полей ввода
     clearFields: function() {
       var fields, fieldsArr;
@@ -253,14 +259,18 @@ var controller = (function(budgetCtrl, UICtrl) {
     var itemID, splitID, type, ID;
 
     // получаем ID элемента item, в котором лежит кнопка
-    itemID = event.parentNode.parentNode.parentNode.parentNode.id;
-    
+    itemID = event.target.parentNode.parentNode.parentNode.id;
+
     if (itemID) {
-      splitID = itemID.splitID('-');
-      type = itemID.splitID('-')[0];
-      ID = itemID.splitID('-')[1];
+      splitID = itemID.split('-');
+      type = splitID[0];
+      ID = splitID[1];
 
       budgetCtrl.deleteItem(type, parseInt(ID));
+
+      UICtrl.deleteListItem(itemID);
+
+      updateBudget();
     }
   };
 
