@@ -104,7 +104,8 @@ var UIController = (function() {
     budgetLabel: '.budget__value',
     incomeLabel: '.budget__income--value',
     expensesLabel: '.budget__expenses--value',
-    percentageLabel: '.budget__expenses--percentage'
+    percentageLabel: '.budget__expenses--percentage',
+    container: '.container'
   };
 
   // UI Controller API
@@ -131,11 +132,11 @@ var UIController = (function() {
       if (type === 'inc') {
         element = DOMStrings.incomeContainer;
 
-        html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+        html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       } else if (type === 'exp') {
         element = DOMStrings.expensesContainer;
 
-        html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+        html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
 
       newHtml = html.replace('%id%', obj.id)
@@ -190,7 +191,7 @@ var controller = (function(budgetCtrl, UICtrl) {
   var setupEventListeners = function() {
     var DOM = UICtrl.getDOMStrings();
 
-    // обработчик нажатия на кнопку
+    // обработчик нажатия на кнопку "добавить"
     document.querySelector(DOM.inputBtn).addEventListener("click", ctrlAddItem);
 
     // обработчик нажатия на Enter
@@ -200,6 +201,9 @@ var controller = (function(budgetCtrl, UICtrl) {
         ctrlAddItem();
       }
     });
+
+    // обработчик нажатия на кнопку "удалить"
+    document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
   };
   
   // обновление бюджета
@@ -226,6 +230,20 @@ var controller = (function(budgetCtrl, UICtrl) {
       UIController.clearFields();
     
       updateBudget();
+    }
+  };
+
+  // удаление элемента
+  var ctrlDeleteItem = function(event) {
+    var itemID, splitID, type, ID;
+
+    // получаем ID элемента item, в котором лежит кнопка
+    itemID = event.parentNode.parentNode.parentNode.parentNode.id;
+    
+    if (itemID) {
+      splitID = itemID.splitID('-');
+      type = itemID.splitID('-')[0];
+      ID = itemID.splitID('-')[1];
     }
   };
 
