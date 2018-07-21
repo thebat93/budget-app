@@ -236,6 +236,11 @@ var controller = (function(budgetCtrl, UICtrl) {
     UIController.displayBudget(budget);
   };
 
+  // обновление процентов затрат
+  var updatePercentages = function() {
+    
+  };
+
   // добавление нового элемента
   var ctrlAddItem = function() {
     var input, newItem;
@@ -251,6 +256,8 @@ var controller = (function(budgetCtrl, UICtrl) {
       UIController.clearFields();
     
       updateBudget();
+
+      updatePercentages();
     }
   };
 
@@ -271,6 +278,8 @@ var controller = (function(budgetCtrl, UICtrl) {
       UICtrl.deleteListItem(itemID);
 
       updateBudget();
+
+      updatePercentages();
     }
   };
 
