@@ -6,7 +6,22 @@ var budgetController = (function() {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
   };
+
+  // метод для расчета процентов расхода
+  Expense.prototype.calcPercentage = function(totalIncome) {
+    if (totalIncome > 0) {
+      this.percentage = Math.round((this.value / totalIncome) * 100);
+    } else {
+      this.percentage = -1;
+    }
+  };
+
+  // метод для получения процентов расхода
+  Expense.prototype.getPercentage = function() {
+    return this.percentage;
+  }
 
   // конструктор для доходов
   var Income = function(id, description, value) {
@@ -91,6 +106,21 @@ var budgetController = (function() {
         data.percentage = -1;
       }
 
+    },
+
+    // расчет процентов расходов
+    calculatePercentages: function() {
+      data.allItems.exp.forEach(function(current) {
+        current.calcPercentage(data.totals.inc);
+      });
+    },
+
+    // вернуть значение процентов всех расходов
+    getPercentages: function() {
+      var allPercentages = data.allItems.exp.map(function(current) {
+        return current.getPercentage();
+      });
+      return allPercentages;
     },
 
     // вернуть значение бюджета
@@ -238,7 +268,9 @@ var controller = (function(budgetCtrl, UICtrl) {
 
   // обновление процентов затрат
   var updatePercentages = function() {
-    
+    budgetCtrl.calculatePercentages();
+
+    var percentages = budgetCtrl.getPercentages();
   };
 
   // добавление нового элемента
