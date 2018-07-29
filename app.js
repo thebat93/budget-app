@@ -150,7 +150,8 @@ var UIController = (function() {
     incomeLabel: '.budget__income--value',
     expensesLabel: '.budget__expenses--value',
     percentageLabel: '.budget__expenses--percentage',
-    container: '.container'
+    container: '.container',
+    expensesPercLabel: '.item__percentage'
   };
 
   // UI Controller API
@@ -229,6 +230,27 @@ var UIController = (function() {
       }
     },
 
+    // отображение процентов
+    displayPercentages: function(percentages) {
+      var fields = document.querySelectorAll(DOMStrings.expensesPercLabel);
+    
+      // forEach для Node
+      var nodeListForEach = function(list, callback) {
+        for (var i = 0; i < list.length; i++) {
+          callback(list[i], i);
+        }
+      }
+
+      // меняем контент для каждого поля
+      nodeListForEach(fields, function(current, index) {
+        if (percentages[index] > 0) {
+          current.textContent = percentages[index] + '%';
+        } else {
+          current.textContent = '---';
+        }
+      });
+    },
+
     // получение селекторов
     getDOMStrings: function() {
         return DOMStrings;
@@ -271,6 +293,8 @@ var controller = (function(budgetCtrl, UICtrl) {
     budgetCtrl.calculatePercentages();
 
     var percentages = budgetCtrl.getPercentages();
+
+    UICtrl.displayPercentages(percentages);
   };
 
   // добавление нового элемента
