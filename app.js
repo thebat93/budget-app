@@ -1,6 +1,5 @@
 // модуль для структуры данных
 var budgetController = (function() {
-  
   // конструктор для расходов
   var Expense = function(id, description, value) {
     this.id = id;
@@ -21,7 +20,7 @@ var budgetController = (function() {
   // метод для получения процентов расхода
   Expense.prototype.getPercentage = function() {
     return this.percentage;
-  }
+  };
 
   // конструктор для доходов
   var Income = function(id, description, value) {
@@ -67,9 +66,9 @@ var budgetController = (function() {
       }
 
       // создание элемента в зависимости от типа
-      if (type === 'exp') {
+      if (type === "exp") {
         newItem = new Expense(ID, desc, val);
-      } else if (type === 'inc') {
+      } else if (type === "inc") {
         newItem = new Income(ID, desc, val);
       }
 
@@ -95,8 +94,8 @@ var budgetController = (function() {
 
     // расчет бюджета
     calculateBudget: function() {
-      calculateTotal('exp');
-      calculateTotal('inc');
+      calculateTotal("exp");
+      calculateTotal("inc");
 
       data.budget = data.totals.inc - data.totals.exp;
 
@@ -105,7 +104,6 @@ var budgetController = (function() {
       } else {
         data.percentage = -1;
       }
-
     },
 
     // расчет процентов расходов
@@ -130,67 +128,76 @@ var budgetController = (function() {
         percentage: data.percentage,
         totalInc: data.totals.inc,
         totalExp: data.totals.exp
-      }
+      };
     }
   };
 })();
 
 // модуль UI
 var UIController = (function() {
-
   // селекторы
   var DOMStrings = {
     inputType: ".add__type",
     inputDecription: ".add__description",
     inputValue: ".add__value",
     inputBtn: ".add__btn",
-    incomeContainer: '.income__list',
-    expensesContainer: '.expenses__list',
-    budgetLabel: '.budget__value',
-    incomeLabel: '.budget__income--value',
-    expensesLabel: '.budget__expenses--value',
-    percentageLabel: '.budget__expenses--percentage',
-    container: '.container',
-    expensesPercLabel: '.item__percentage',
-    dateLabel: '.budget__title--month'
+    incomeContainer: ".income__list",
+    expensesContainer: ".expenses__list",
+    budgetLabel: ".budget__value",
+    incomeLabel: ".budget__income--value",
+    expensesLabel: ".budget__expenses--value",
+    percentageLabel: ".budget__expenses--percentage",
+    container: ".container",
+    expensesPercLabel: ".item__percentage",
+    dateLabel: ".budget__title--month"
   };
 
-    // форматирование цифр
-    var formatNumber = function(num, type) {
-      var numSplit, int, dec;
-      // абсолютное значение
-      num = Math.abs(num);
+  // форматирование цифр
+  var formatNumber = function(num, type) {
+    var numSplit, int, dec;
+    // абсолютное значение
+    num = Math.abs(num);
 
-      // добавляем всегда 2 знака после запятой
-      // возвращает строку
-      num = num.toFixed(2);
+    // добавляем всегда 2 знака после запятой
+    // возвращает строку
+    num = num.toFixed(2);
 
-      // добавляем запятую-разделитель для тысяч
-      numSplit = num.split('.');
+    // добавляем запятую-разделитель для тысяч
+    numSplit = num.split(".");
 
-      int = numSplit[0];
-      if (int.length > 3) {
-        int = int.subst(0, int.length - 3) + ',' + int.substr(int.length - 3, int.length);
-      }
+    int = numSplit[0];
+    if (int.length > 3) {
+      int =
+        int.subst(0, int.length - 3) +
+        "," +
+        int.substr(int.length - 3, int.length);
+    }
 
-      dec = numSplit[1];
+    dec = numSplit[1];
 
-      return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
-    };
+    return (type === "exp" ? "-" : "+") + " " + int + "." + dec;
+  };
+
+  // forEach для Node
+  var nodeListForEach = function(list, callback) {
+    for (var i = 0; i < list.length; i++) {
+      callback(list[i], i);
+    }
+  };
 
   // UI Controller API
   return {
     // получение значений
     getInput: function() {
       return {
-      // тип: доход/расход
-      type: document.querySelector(DOMStrings.inputType).value, // 'inc' / 'exp'
+        // тип: доход/расход
+        type: document.querySelector(DOMStrings.inputType).value, // 'inc' / 'exp'
 
-      // описание
-      description: document.querySelector(DOMStrings.inputDecription).value,
+        // описание
+        description: document.querySelector(DOMStrings.inputDecription).value,
 
-      // сумма
-      value: parseFloat(document.querySelector(DOMStrings.inputValue).value)
+        // сумма
+        value: parseFloat(document.querySelector(DOMStrings.inputValue).value)
       };
     },
 
@@ -199,22 +206,25 @@ var UIController = (function() {
       var html, newHtml, element;
 
       // шаблоны html-кода
-      if (type === 'inc') {
+      if (type === "inc") {
         element = DOMStrings.incomeContainer;
 
-        html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
-      } else if (type === 'exp') {
+        html =
+          '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+      } else if (type === "exp") {
         element = DOMStrings.expensesContainer;
 
-        html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+        html =
+          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
 
-      newHtml = html.replace('%id%', obj.id)
-        .replace('%description%', obj.description)
-        .replace('%value%', formatNumber(obj.value, type));
+      newHtml = html
+        .replace("%id%", obj.id)
+        .replace("%description%", obj.description)
+        .replace("%value%", formatNumber(obj.value, type));
 
       // добавляем html в div после контента и перед закрывающим тегом
-      document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+      document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
     },
 
     // удаление дохода / расхода
@@ -226,10 +236,12 @@ var UIController = (function() {
     // очищение полей ввода
     clearFields: function() {
       var fields, fieldsArr;
-      
+
       // выбор по нескольким селекторам
-      fields = document.querySelectorAll(DOMStrings.inputDecription + ', ' + DOMStrings.inputValue);
-      
+      fields = document.querySelectorAll(
+        DOMStrings.inputDecription + ", " + DOMStrings.inputValue
+      );
+
       // првращаем List в Array
       fieldsArr = Array.prototype.slice.call(fields);
 
@@ -243,37 +255,39 @@ var UIController = (function() {
 
     // отображение бюджета
     displayBudget: function(obj) {
-      var type
-      obj.budget > 0 ? type = 'inc' : type = 'exp';
+      var type;
+      obj.budget > 0 ? (type = "inc") : (type = "exp");
 
-      document.querySelector(DOMStrings.budgetLabel).textContent = formatNumber(obj.budget, type);
-      document.querySelector(DOMStrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
-      document.querySelector(DOMStrings.expensesLabel).textContent = formatNumber(obj.totalExp, 'exp');
-      
+      document.querySelector(DOMStrings.budgetLabel).textContent = formatNumber(
+        obj.budget,
+        type
+      );
+      document.querySelector(DOMStrings.incomeLabel).textContent = formatNumber(
+        obj.totalInc,
+        "inc"
+      );
+      document.querySelector(
+        DOMStrings.expensesLabel
+      ).textContent = formatNumber(obj.totalExp, "exp");
+
       if (obj.percentage > 0) {
-        document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage + '%';
+        document.querySelector(DOMStrings.percentageLabel).textContent =
+          obj.percentage + "%";
       } else {
-        document.querySelector(DOMStrings.percentageLabel).textContent = '---';
+        document.querySelector(DOMStrings.percentageLabel).textContent = "---";
       }
     },
 
     // отображение процентов
     displayPercentages: function(percentages) {
       var fields = document.querySelectorAll(DOMStrings.expensesPercLabel);
-    
-      // forEach для Node
-      var nodeListForEach = function(list, callback) {
-        for (var i = 0; i < list.length; i++) {
-          callback(list[i], i);
-        }
-      }
 
       // меняем контент для каждого поля
       nodeListForEach(fields, function(current, index) {
         if (percentages[index] > 0) {
-          current.textContent = percentages[index] + '%';
+          current.textContent = percentages[index] + "%";
         } else {
-          current.textContent = '---';
+          current.textContent = "---";
         }
       });
     },
@@ -282,22 +296,52 @@ var UIController = (function() {
     displayMonth: function() {
       var now, year, month, months;
       now = new Date();
-      months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ];
       month = months[now.getMonth()];
       year = now.getFullYear();
-      document.querySelector(DOMStrings.dateLabel).textContent = month + ' ' + year;
+      document.querySelector(DOMStrings.dateLabel).textContent =
+        month + " " + year;
+    },
+
+    // изменение стиля подсветки инпутов
+    changedType: function() {
+      var fields = document.querySelectorAll(
+        DOMStrings.inputType +
+          "," +
+          DOMStrings.inputDecription +
+          "," +
+          DOMStrings.inputValue
+      );
+
+      nodeListForEach(fields, function(cur) {
+        cur.classList.toggle("red-focus");
+      });
+
+      document.querySelector(DOMStrings.inputBtn).classList.toggle("red");
     },
 
     // получение селекторов
     getDOMStrings: function() {
-        return DOMStrings;
+      return DOMStrings;
     }
   };
 })();
 
 // модуль контроллера приложения
 var controller = (function(budgetCtrl, UICtrl) {
-
   var setupEventListeners = function() {
     var DOM = UICtrl.getDOMStrings();
 
@@ -313,9 +357,16 @@ var controller = (function(budgetCtrl, UICtrl) {
     });
 
     // обработчик нажатия на кнопку "удалить"
-    document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+    document
+      .querySelector(DOM.container)
+      .addEventListener("click", ctrlDeleteItem);
+
+    // обработчик изменения типа добавляемого элемента
+    document
+      .querySelector(DOM.inputType)
+      .addEventListener("change", UICtrl.changedType);
   };
-  
+
   // обновление бюджета
   var updateBudget = function() {
     budgetCtrl.calculateBudget();
@@ -340,14 +391,13 @@ var controller = (function(budgetCtrl, UICtrl) {
 
     input = UICtrl.getInput();
 
-    if (input.description !== '' && !isNaN(input.value) && input.value > 0) {
-
+    if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
       newItem = budgetCtrl.addItem(input.type, input.description, input.value);
-  
+
       UIController.addListItem(newItem, input.type);
-  
+
       UIController.clearFields();
-    
+
       updateBudget();
 
       updatePercentages();
@@ -362,7 +412,7 @@ var controller = (function(budgetCtrl, UICtrl) {
     itemID = event.target.parentNode.parentNode.parentNode.id;
 
     if (itemID) {
-      splitID = itemID.split('-');
+      splitID = itemID.split("-");
       type = splitID[0];
       ID = splitID[1];
 
