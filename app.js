@@ -1,4 +1,4 @@
-// модуль для структуры данных
+// MODEL
 var budgetController = (function() {
   // конструктор для расходов
   var Expense = function(id, description, value) {
@@ -133,7 +133,7 @@ var budgetController = (function() {
   };
 })();
 
-// модуль UI
+// VIEW
 var UIController = (function() {
   // селекторы
   var DOMStrings = {
@@ -340,7 +340,7 @@ var UIController = (function() {
   };
 })();
 
-// модуль контроллера приложения
+// CONTROLLER
 var controller = (function(budgetCtrl, UICtrl) {
   var setupEventListeners = function() {
     var DOM = UICtrl.getDOMStrings();
